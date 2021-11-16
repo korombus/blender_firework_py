@@ -27,16 +27,10 @@ def SetFireworkBallMaterial():
     # マテリアルを追加
     C.object.data.materials.append(material_glass)
 
-def FireworkAnimation():
-    C = bpy.context
-    D = bpy.data
+def fireworkAnimationToRiseup(C, D, sphere_obj):
+    pass
 
-    # 現在アクティブ状態のオブジェクトを取得
-    sphere_obj = C.active_object
-
-    # シーンは180フレームで終わり
-    C.scene.frame_end = 140
-
+def FireworkAnimationToBarn(C, D, sphere_obj):
     # アニメーションの最終キーフレーム
     animation_end_frame = 40
 
@@ -65,5 +59,17 @@ def FireworkAnimation():
     sphere_obj.keyframe_insert(data_path="show_instancer_for_render", index=-1)
 
 if __name__ == '__main__':
+    # 花火玉本体のマテリアルを設定
     SetFireworkBallMaterial()
-    FireworkAnimation()
+
+    C = bpy.context
+    D = bpy.data
+
+    # 現在アクティブ状態のオブジェクトを取得
+    sphere_obj = C.active_object
+
+    # 花火上昇時のアニメーションを作成
+    fireworkAnimationToRiseup(C, D, sphere_obj)
+
+    # 花火発破時のアニメーションを作成
+    FireworkAnimationToBarn(C, D, sphere_obj)

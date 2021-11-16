@@ -7,9 +7,19 @@ material_file_name = FILE_ROOT_PATH + "material_firework.py"
 particle_file_name = FILE_ROOT_PATH + "particle_firework.py"
 animatio_file_name = FILE_ROOT_PATH + "firework_animation.py"
 woshader_file_name = FILE_ROOT_PATH + "world_shader.py"
+cameanim_file_name = FILE_ROOT_PATH + "camera_animtion.py"
 
 # 生み出す花火の個数を設定
 FIREWORKS_NUM = 3
+
+#オブジェクト全選択
+bpy.ops.object.select_all(action='SELECT') 
+#オブジェクト全削除
+bpy.ops.object.delete(True)
+
+# カメラ配置
+bpy.ops.object.camera_add(location=(3,0,1), rotation=(1.5, 0.2, 0))
+bpy.data.objects[0].name = "Camera"
 
 # カメラ位置を設定
 bpy.data.objects["Camera"].location = (30, -30, 10)
@@ -20,6 +30,9 @@ bpy.data.objects["Camera"].rotation_euler = (120*ROTATE, 0, 45*ROTATE)
 
 # Worldのシェーダーで星空を生成
 exec(compile(open(woshader_file_name).read(), woshader_file_name, 'exec'))
+
+# シーンのエンドフレーム
+bpy.context.scene.frame_end = 600
 
 for i in range(FIREWORKS_NUM):
     # 花火の色をランダムに設定
