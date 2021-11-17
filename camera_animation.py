@@ -6,9 +6,7 @@ def CameraAnimtion():
     bpy.ops.curve.primitive_bezier_circle_add(enter_editmode=False, align='WORLD', scale=(25, 25, 1))
     bezier_obj = C.active_object
     bezier_obj.scale = (25, 25, 1)
-    print(bezier_obj.name)
     bpy.data.curves[bezier_obj.name].path_duration = bpy.context.scene.frame_end / 2
-    print(bpy.data.curves[bezier_obj.name].path_duration)
 
     # カメラのターゲットとなるオブジェクトを生成
     bpy.ops.mesh.primitive_cube_add(enter_editmode=False, align='WORLD', location=(0, 0, 33), scale=(1, 1, 1))
@@ -29,7 +27,6 @@ def CameraAnimtion():
     bpy.context.view_layer.objects.active = camera
     override={'constraint': camera.constraints.active}
     bpy.ops.constraint.followpath_path_animate(override, constraint=camera.constraints.active.name)
-    print(bpy.data.curves[bezier_obj.name].path_duration)
 
     camera.constraints.new(type="TRACK_TO")
     camera.constraints.active.target = square_obj
