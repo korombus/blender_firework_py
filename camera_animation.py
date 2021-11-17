@@ -2,25 +2,37 @@ def CameraAnimtion():
     C = bpy.context
     D = bpy.data
 
-    # カメラの動き（円周上を1周する）
-    bpy.ops.curve.primitive_nurbs_circle_add(location=(3, 0, 0), rotation=((3.1415/2), 0, 0))
-    C.object.data.path_duration = 72
+    # カメラが動くベジェ円を生成
+    bpy.ops.curve.primitive_bezier_circle_add(enter_editmode=False, align='WORLD', scale=(25, 25, 1))
+    bezier_obj = C.active_object
+    bezier_obj.scale = (25, 25, 1)
+    print(bezier_obj.name)
+    bpy.data.curves[bezier_obj.name].path_duration = bpy.context.scene.frame_end / 2
+    print(bpy.data.curves[bezier_obj.name].path_duration)
 
-    camera = bpy.data.objects['Camera']
-    ncircle = bpy.data.objects['NurbsCircle']
+    # カメラのターゲットとなるオブジェクトを生成
+    bpy.ops.mesh.primitive_cube_add(enter_editmode=False, align='WORLD', location=(0, 0, 33), scale=(1, 1, 1))
+    square_obj = C.active_object
+    # ターゲットオブジェクトは見えないようにしておく
+    square_obj.hide_viewport = True
+    square_obj.hide_render = True
 
-    camera.select = True
-    ncircle.select = True
+    # カメラのConstraintsを設定
+    camera = bpy.data.objects["Camera"]
+    camera.constraints.new(type="FOLLOW_PATH")
+    camera.constraints.active.target = bezier_obj
 
-    C.scene.objects.active = ncircle #parent
-    bpy.ops.object.parent_set(type='FOLLOW') #follow path
+    # constraintの「FOLLOW_PATH」に存在しているパスアニメーションのボタンを押したいが
+    # カメラオブジェクトをview_layerでactiveにした上で
+    # bpy.ops.constraintをカメラに設定したconstraintでオーバーライドしてあげないとボタンと同等の機能を指定できない。
+    # なので、bpy.ops.constraintの向き先を強制的にカメラのconstraintに切り替えた上でアニメーションを設定する
+    bpy.context.view_layer.objects.active = camera
+    override={'constraint': camera.constraints.active}
+    bpy.ops.constraint.followpath_path_animate(override, constraint=camera.constraints.active.name)
+    print(bpy.data.curves[bezier_obj.name].path_duration)
 
-    # キーフレーム設定
-    camera.select = True
-    ncircle.select = False
-    # bpy.context.scene.frame_current = 0 # set frame to 0
-    # camera.location = (3,0,1) # set the location
-    # bpy.ops.anim.keyframe_insert_menu(type='Location')
+    camera.constraints.new(type="TRACK_TO")
+    camera.constraints.active.target = square_obj
 
 if __name__ == '__main__':
     CameraAnimtion()

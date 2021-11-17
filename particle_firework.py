@@ -13,6 +13,9 @@ def ParticleFireworkToRaiseup(sphere_obj, material_object_name, firework_start_f
     p_s.render_type = 'OBJECT'
     p_s.instance_object = D.objects[material_object_name]
 
+    # フィールドの重み
+    p_s.effector_weights.all = 0
+
 def ParticleFireworkToBarn(C, D, sphere_obj, material_object_name, firework_start_frame):
     # パーティクルシステムを追加
     bpy.ops.object.particle_system_add()
