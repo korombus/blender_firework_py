@@ -27,16 +27,22 @@ def SetFireworkBallMaterial():
     # マテリアルを追加
     C.object.data.materials.append(material_glass)
 
-def fireworkAnimationToRiseup(C, D, sphere_obj):
-    pass
-
-def FireworkAnimationToBarn(C, D, sphere_obj):
+def FireworkAnimation(C, D, sphere_obj, firework_start_frame):
     # アニメーションの最終キーフレーム
-    animation_end_frame = 40
+    animation_end_frame = firework_start_frame + 40
 
     # 打ち上げ終了までのキーフレームを設定
-    # 初期フレーム - 花火玉は見えるようにしておく。
+    # 初期フレーム - 花火玉は見えないようにしておく
     C.scene.frame_set(0)
+    sphere_obj.location = (sphere_obj.location.x, sphere_obj.location.y, 0)
+    sphere_obj.show_instancer_for_viewport = False
+    sphere_obj.show_instancer_for_render = False
+    sphere_obj.keyframe_insert(data_path="location", index=-1)
+    sphere_obj.keyframe_insert(data_path="show_instancer_for_viewport", index=-1)
+    sphere_obj.keyframe_insert(data_path="show_instancer_for_render", index=-1)
+
+    # 打ち出し開始フレーム - 花火玉を出現させる
+    C.scene.frame_set(firework_start_frame)
     sphere_obj.location = (sphere_obj.location.x, sphere_obj.location.y, 0)
     sphere_obj.show_instancer_for_viewport = True
     sphere_obj.show_instancer_for_render = True
@@ -45,7 +51,7 @@ def FireworkAnimationToBarn(C, D, sphere_obj):
     sphere_obj.keyframe_insert(data_path="show_instancer_for_render", index=-1)
 
     # 中間フレーム - ここまで一気に花火を上昇させる
-    C.scene.frame_set(20)
+    C.scene.frame_set(firework_start_frame + 20)
     sphere_obj.location = (sphere_obj.location.x, sphere_obj.location.y, 30)
     sphere_obj.keyframe_insert(data_path="location", index=-1)
 
@@ -59,6 +65,8 @@ def FireworkAnimationToBarn(C, D, sphere_obj):
     sphere_obj.keyframe_insert(data_path="show_instancer_for_render", index=-1)
 
 if __name__ == '__main__':
+    firework_start_frame = ST_FR
+
     # 花火玉本体のマテリアルを設定
     SetFireworkBallMaterial()
 
@@ -68,8 +76,5 @@ if __name__ == '__main__':
     # 現在アクティブ状態のオブジェクトを取得
     sphere_obj = C.active_object
 
-    # 花火上昇時のアニメーションを作成
-    fireworkAnimationToRiseup(C, D, sphere_obj)
-
-    # 花火発破時のアニメーションを作成
-    FireworkAnimationToBarn(C, D, sphere_obj)
+    # 花火のアニメーションを作成
+    FireworkAnimation(C, D, sphere_obj, firework_start_frame)

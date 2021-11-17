@@ -10,7 +10,7 @@ woshader_file_name = FILE_ROOT_PATH + "world_shader.py"
 cameanim_file_name = FILE_ROOT_PATH + "camera_animtion.py"
 
 # 生み出す花火の個数を設定
-FIREWORKS_NUM = 3
+FIREWORKS_NUM = 50
 
 #オブジェクト全選択
 bpy.ops.object.select_all(action='SELECT') 
@@ -32,7 +32,8 @@ bpy.data.objects["Camera"].rotation_euler = (120*ROTATE, 0, 45*ROTATE)
 exec(compile(open(woshader_file_name).read(), woshader_file_name, 'exec'))
 
 # シーンのエンドフレーム
-bpy.context.scene.frame_end = 600
+frame_end = 600
+bpy.context.scene.frame_end = frame_end
 
 for i in range(FIREWORKS_NUM):
     # 花火の色をランダムに設定
@@ -50,8 +51,12 @@ for i in range(FIREWORKS_NUM):
     # 花火本体を生成
     bpy.ops.mesh.primitive_uv_sphere_add(enter_editmode=False, align='WORLD', location=firework_pos, scale=(1, 1, 1))
 
+    # 花火の発射フレームをランダムに設定
+    firework_start_frame = random.randint(0, frame_end - 100)
+
     # 花火パーティクル作成
-    exec(compile(open(particle_file_name).read().replace("OBJ_NAME", firework_particle_object_name), particle_file_name, 'exec'))
+    exec(compile(open(particle_file_name).read().replace("OBJ_NAME", firework_particle_object_name)
+                                                .replace("ST_FR", str(firework_start_frame)), particle_file_name, 'exec'))
 
     # アニメーション作成
-    exec(compile(open(animatio_file_name).read(), animatio_file_name, 'exec'))
+    exec(compile(open(animatio_file_name).read().replace("ST_FR", str(firework_start_frame)), animatio_file_name, 'exec'))
