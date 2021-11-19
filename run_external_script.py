@@ -5,11 +5,13 @@ import math
 ## 固定値設定 #############################################################
 # 実行ファイルパス一覧
 FILE_ROOT_PATH = 'D:/blender_firework_py/'
+setrendr_file_name = FILE_ROOT_PATH + "setting_render.py"
 material_file_name = FILE_ROOT_PATH + "material_firework.py"
 particle_file_name = FILE_ROOT_PATH + "particle_firework.py"
 animatio_file_name = FILE_ROOT_PATH + "firework_animation.py"
 woshader_file_name = FILE_ROOT_PATH + "world_shader.py"
 cameanim_file_name = FILE_ROOT_PATH + "camera_animation.py"
+hanamodl_file_name = FILE_ROOT_PATH + "hanabi_model.py"
 
 # SEファイルパス一覧
 SE_ROOT_PATH = FILE_ROOT_PATH + 'se/'
@@ -25,12 +27,7 @@ FRAME_END = 600
 ##########################################################################
 
 # レンダリング設定
-bpy.data.scenes["Scene"].render.filepath = FILE_ROOT_PATH
-bpy.data.scenes["Scene"].render.fps = 30
-bpy.data.scenes["Scene"].render.image_settings.file_format = "FFMPEG"
-bpy.data.scenes["Scene"].render.ffmpeg.format = "AVI"
-bpy.data.scenes["Scene"].render.ffmpeg.codec = "H264"
-bpy.data.scenes["Scene"].render.ffmpeg.audio_codec = "AAC"
+exec(compile(open(setrendr_file_name).read().replace("FILE_ROOT_PATH", FILE_ROOT_PATH), setrendr_file_name, 'exec'))
 
 #オブジェクト全選択
 bpy.ops.object.select_all(action='SELECT') 
@@ -65,12 +62,9 @@ for i in range(FIREWORKS_NUM):
 
     # パーティクルオブジェクトの名前を保持
     firework_particle_object_name = bpy.context.active_object.name
-
-    # 花火の射出位置をランダムに設定
-    firework_pos = (random.randint(-10, 10), random.randint(-10, 10), 0)
     
     # 花火本体を生成
-    bpy.ops.mesh.primitive_uv_sphere_add(enter_editmode=False, align='WORLD', location=firework_pos, scale=(1, 1, 1))
+    exec(compile(open(hanamodl_file_name).read(), hanamodl_file_name, 'exec'))
 
     # 花火の発射フレームをランダムに設定
     firework_start_frame = random.randint(0, FRAME_END - 100)

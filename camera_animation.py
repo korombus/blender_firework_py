@@ -6,7 +6,7 @@ def CameraAnimtion():
     bpy.ops.curve.primitive_bezier_circle_add(enter_editmode=False, align='WORLD', scale=(25, 25, 1))
     bezier_obj = C.active_object
     bezier_obj.scale = (25, 25, 1)
-    bpy.data.curves[bezier_obj.name].path_duration = int(bpy.context.scene.frame_end / 2)
+    bpy.data.curves[bpy.data.curves.keys()[-1]].path_duration = int(bpy.context.scene.frame_end / 2)
 
     # カメラのターゲットとなるオブジェクトを生成
     bpy.ops.mesh.primitive_cube_add(enter_editmode=False, align='WORLD', location=(0, 0, 33), scale=(1, 1, 1))
