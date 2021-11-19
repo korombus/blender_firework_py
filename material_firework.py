@@ -1,9 +1,46 @@
+import random
+
+def CreateStartObject():
+    C = bpy.context
+    D = bpy.data
+    # 頂点座標
+    verts = [[0.0015, -0.0034, 0.4340],[0.0000, 1.0000, 0.0000],[-0.2067, 0.2845, 0.0000],[-0.9511, 0.3090, 0.0000],
+            [-0.3345, -0.1087, 0.0000],[-0.5878, -0.8090, 0.0000],[0.0000, -0.3517, 0.0000],[0.5878, -0.8090, 0.0000],
+            [0.3345, -0.1087, 0.0000],[0.9511, 0.3090, 0.0000],[0.2067, 0.2845, 0.0000],[0.0000, -0.0000, -0.5236]]
+    # 面を構成する頂点一覧
+    faces = [[ 0,  1,  2],[ 0,  2,  3],[ 0,  3,  4, ],[ 0,  4,  5],[ 0,  5,  6],
+            [ 0,  6,  7],[ 0,  7,  8],[ 0,  8,  9],[ 0,  9, 10],[ 0, 10,  1],
+            [ 2,  1, 11],[ 1, 10, 11],[10,  9, 11],[ 9,  8, 11],[ 8,  7, 11],
+            [ 7,  6, 11],[ 6,  5, 11],[ 5,  4, 11],[ 4,  3, 11],[ 3,  2, 11]]
+    
+    # 星形のメッシュを作成
+    star_msh = D.meshes.new(name="firework_star_mesh")
+    star_msh.from_pydata(verts, [], faces)
+    star_msh.update()
+
+    # 星形のオブジェクトを生成
+    star_obj = D.objects.new(name="firework_star", object_data=star_msh)
+    star_obj.location = (0, 0, -10)
+
+    # オブジェクトをシーンコレクションへリンク
+    C.collection.objects.link(star_obj)
+    bpy.ops.object.collection_link(collection='Collection')
+
+    # オブジェクトをアクティブにする
+    C.view_layer.objects.active = star_obj
+
 def MaterialFirework(color):
     C = bpy.context
     D = bpy.data
 
-    # オブジェクトを追加する
-    bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=1, enter_editmode=False, align='WORLD', location=(0, 0, -10), scale=(1, 1, 1))
+    # 花火のパーティクルオブジェクトを生成
+    # 50%でICO球
+    if random.randint(0, 100) < 50:
+        bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=1, enter_editmode=False, align='WORLD', location=(0, 0, -10), scale=(0.5, 0.5, 0.5))
+    
+    # 50%で星
+    else:
+        CreateStartObject()
     
     # マテリアルを新たに設定
     material_glass = D.materials.new('Firework')
