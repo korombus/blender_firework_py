@@ -3,13 +3,19 @@ import random
 import math
 
 ## 固定値設定 #############################################################
-# ファイルパス一覧
+# 実行ファイルパス一覧
 FILE_ROOT_PATH = 'D:/blender_firework_py/'
 material_file_name = FILE_ROOT_PATH + "material_firework.py"
 particle_file_name = FILE_ROOT_PATH + "particle_firework.py"
 animatio_file_name = FILE_ROOT_PATH + "firework_animation.py"
 woshader_file_name = FILE_ROOT_PATH + "world_shader.py"
 cameanim_file_name = FILE_ROOT_PATH + "camera_animation.py"
+
+# SEファイルパス一覧
+SE_ROOT_PATH = FILE_ROOT_PATH + 'se/'
+sound_begin = (SE_ROOT_PATH + "花火・一発_begin.wav", SE_ROOT_PATH + "花火・一発_begin.wav")
+sound_bomb = (SE_ROOT_PATH + "花火・一発_bomb.wav", SE_ROOT_PATH + "nc178345_bomb.wav")
+
 
 # 生み出す花火の個数を設定
 FIREWORKS_NUM = 50
@@ -20,12 +26,21 @@ FRAME_END = 600
 
 # レンダリング設定
 bpy.data.scenes["Scene"].render.filepath = FILE_ROOT_PATH
-bpy.data.scenes["Scene"].render.image_settings.file_format = "AVI_JPEG"
+bpy.data.scenes["Scene"].render.fps = 30
+bpy.data.scenes["Scene"].render.image_settings.file_format = "FFMPEG"
+bpy.data.scenes["Scene"].render.ffmpeg.format = "AVI"
+bpy.data.scenes["Scene"].render.ffmpeg.codec = "H264"
+bpy.data.scenes["Scene"].render.ffmpeg.audio_codec = "AAC"
 
 #オブジェクト全選択
 bpy.ops.object.select_all(action='SELECT') 
 #オブジェクト全削除
 bpy.ops.object.delete(True)
+
+# シーケンスエディタを生成
+if bpy.context.scene.sequence_editor:
+    bpy.context.scene.sequence_editor_clear()
+bpy.context.scene.sequence_editor_create()
 
 # 回転はラジアンに直す必要があるので、そのための定数を用意
 ROTATE = 2*math.pi/360
@@ -65,4 +80,6 @@ for i in range(FIREWORKS_NUM):
                                                 .replace("ST_FR", str(firework_start_frame)), particle_file_name, 'exec'))
 
     # 花火アニメーション作成
-    exec(compile(open(animatio_file_name).read().replace("ST_FR", str(firework_start_frame)), animatio_file_name, 'exec'))
+    exec(compile(open(animatio_file_name).read().replace("ST_FR", str(firework_start_frame))
+                                                .replace("SE_BG", str(sound_begin))
+                                                .replace("SE_BO", str(sound_bomb)), animatio_file_name, 'exec'))

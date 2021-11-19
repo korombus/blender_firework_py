@@ -1,3 +1,5 @@
+import random
+
 def SetFireworkBallMaterial():
     C = bpy.context
     D = bpy.data
@@ -27,7 +29,7 @@ def SetFireworkBallMaterial():
     # マテリアルを追加
     C.object.data.materials.append(material_glass)
 
-def FireworkAnimation(C, D, sphere_obj, firework_start_frame):
+def FireworkAnimation(C, D, sphere_obj, firework_start_frame, firework_se_begin, firework_se_bomb):
     # アニメーションの最終キーフレーム
     animation_end_frame = firework_start_frame + 40
 
@@ -64,8 +66,24 @@ def FireworkAnimation(C, D, sphere_obj, firework_start_frame):
     sphere_obj.keyframe_insert(data_path="show_instancer_for_viewport", index=-1)
     sphere_obj.keyframe_insert(data_path="show_instancer_for_render", index=-1)
 
+    # 花火のSEを付ける
+    # 花火玉をアクティブにする
+    C.view_layer.objects.active = sphere_obj
+
+    # 花火玉の名前の番号でチャンネルを割り振るようにする
+    sphere_channel = 1
+    if '.' in sphere_obj.name:
+        sphere_channel = (int(sphere_obj.name.split('.')[1]) + 1) % 32
+    
+    # 打ち上げSE
+    C.scene.sequence_editor.sequences.new_sound(name="Begin", filepath=firework_se_begin[random.randint(0, len(firework_se_begin) - 1)], channel=sphere_channel, frame_start=firework_start_frame)
+    # 爆発SE
+    C.scene.sequence_editor.sequences.new_sound(name="Bomb", filepath=firework_se_bomb[random.randint(0, len(firework_se_bomb) - 1)], channel=sphere_channel, frame_start=animation_end_frame)
+
 if __name__ == '__main__':
     firework_start_frame = ST_FR
+    firework_se_begin = SE_BG
+    firework_se_bomb = SE_BO
 
     # 花火玉本体のマテリアルを設定
     SetFireworkBallMaterial()
@@ -77,4 +95,4 @@ if __name__ == '__main__':
     sphere_obj = C.active_object
 
     # 花火のアニメーションを作成
-    FireworkAnimation(C, D, sphere_obj, firework_start_frame)
+    FireworkAnimation(C, D, sphere_obj, firework_start_frame, firework_se_begin, firework_se_bomb)
