@@ -21,11 +21,31 @@ def SetFireworkBallMaterial():
     # 放射ノードの作成
     emission = material_tree.nodes.new(type='ShaderNodeEmission')
     emission.location = (0, 0)
-    # 色は赤色に設定。
-    emission.inputs[0].default_value = (1, 0, 0, 1)
+    # 放射の強さを設定。
+    emission.inputs[1].default_value = 0.4
+
+    # カラーランプの作成
+    color_ramp = material_tree.nodes.new(type='ShaderNodeValToRGB')
+    color_ramp.location = (-300, 0)
+    # 色を設定。
+    color_ramp.color_ramp.elements[0].color = (1, 0.45, 0, 1)
+
+    # レイヤーウェイトを作成
+    layer_weight = material_tree.nodes.new(type='ShaderNodeLayerWeight')
+    layer_weight.location = (-600, 0)
+    # ブレンドを設定。
+    layer_weight.inputs[0].default_value = 0.6
 
     # ノードを接続
+    # レイヤーウェイト -> カラーランプ
+    material_tree.links.new(layer_weight.outputs[1], color_ramp.inputs[0])
+
+    # カラーランプ -> 放射
+    material_tree.links.new(color_ramp.outputs[0], emission.inputs[0])
+
+    # 放射 -> 出力
     material_tree.links.new(emission.outputs[0], output.inputs[0])
+
     # マテリアルを追加
     C.object.data.materials.append(material_glass)
 
@@ -73,7 +93,7 @@ def FireworkAnimation(C, D, sphere_obj, firework_start_frame, firework_se_begin,
     # 花火玉の名前の番号でチャンネルを割り振るようにする
     sphere_channel = 1
     if '.' in sphere_obj.name:
-        sphere_channel = (int(sphere_obj.name.split('.')[1]) + 1) % 32
+        sphere_channel = (int(sphere_obj.name.split('.')[1]) % 32) + 1
     
     # 打ち上げSE
     C.scene.sequence_editor.sequences.new_sound(name="Begin", filepath=firework_se_begin[random.randint(0, len(firework_se_begin) - 1)], channel=sphere_channel, frame_start=firework_start_frame)

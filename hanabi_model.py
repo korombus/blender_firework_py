@@ -7,11 +7,11 @@ def CreateHanabiModel():
 
     # 70%で通常の球
     if random.randint(0, 100) < 70:
-        bpy.ops.mesh.primitive_uv_sphere_add(enter_editmode=False, align='WORLD', location=firework_pos, scale=(1, 1, 1))
+        bpy.ops.mesh.primitive_uv_sphere_add(enter_editmode=False, align='WORLD', location=firework_pos, scale=(.5, .5, .5))
     
     # 30%でモンキーの球
     else:
-        bpy.ops.mesh.primitive_monkey_add(enter_editmode=False, align='WORLD', location=firework_pos, scale=(1, 1, 1))
+        bpy.ops.mesh.primitive_monkey_add(enter_editmode=False, align='WORLD', location=firework_pos, scale=(.5, .5, .5))
 
 
 if __name__ == '__main__':

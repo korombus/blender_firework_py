@@ -20,7 +20,7 @@ def CreateStartObject():
 
     # 星形のオブジェクトを生成
     star_obj = D.objects.new(name="firework_star", object_data=star_msh)
-    star_obj.location = (0, 0, -10)
+    star_obj.location = (0, 0, -1000)
 
     # オブジェクトをシーンコレクションへリンク
     C.collection.objects.link(star_obj)
@@ -36,14 +36,14 @@ def MaterialFirework(color):
     # 花火のパーティクルオブジェクトを生成
     # 50%でICO球
     if random.randint(0, 100) < 50:
-        bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=1, enter_editmode=False, align='WORLD', location=(0, 0, -10), scale=(0.5, 0.5, 0.5))
+        bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=1, enter_editmode=False, align='WORLD', location=(0, 0, -1000), scale=(0.5, 0.5, 0.5))
     
     # 50%で星
     else:
         CreateStartObject()
     
     # マテリアルを新たに設定
-    material_glass = D.materials.new('Firework')
+    material_glass = D.materials.new('Firework_Particle_Material')
     
     # ノードを使えるようにする
     material_glass.use_nodes = True

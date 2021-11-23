@@ -11,6 +11,7 @@ def ParticleFireworkToRaiseup(sphere_obj, material_object_name, firework_start_f
     # レンダー
     p_s.render_type = 'LINE'
     p_s.render_type = 'OBJECT'
+    p_s.particle_size = 0.2
     p_s.instance_object = D.objects[material_object_name]
 
     # フィールドの重み
