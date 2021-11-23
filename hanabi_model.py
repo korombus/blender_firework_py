@@ -1,8 +1,8 @@
 import random
 
-def CreateHanabiModel():
-    # 花火の射出位置をランダムに設定
-    firework_pos = (random.randint(-10, 10), random.randint(-10, 10), 0)
+def CreateHanabiModel(x,y):
+    # 花火の射出位置を設定
+    firework_pos = (x, y, 0)
 
 
     # 70%で通常の球
@@ -15,4 +15,11 @@ def CreateHanabiModel():
 
 
 if __name__ == '__main__':
-    CreateHanabiModel()
+    try:
+        pos_X = p_x
+        pos_Y = p_y
+    except:
+        pos_X = random.randint(-10, 10)
+        pos_Y = random.randint(-10, 10)
+
+    CreateHanabiModel(pos_X, pos_Y)
