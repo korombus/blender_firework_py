@@ -71,7 +71,7 @@ with open(program_json_name, mode='r', encoding='utf-8') as f:
                                                         .replace('p_y', str(program_data["y"])), hanamodl_file_name, 'exec'))
 
             # 花火の発射フレームを設定
-            firework_start_frame = int(frame_key)
+            firework_start_frame = frame_key
 
             # 花火パーティクル作成
             exec(compile(open(particle_file_name).read().replace("OBJ_NAME", firework_particle_object_name)

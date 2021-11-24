@@ -91,14 +91,15 @@ def FireworkAnimation(C, D, sphere_obj, firework_start_frame, firework_se_begin,
     C.view_layer.objects.active = sphere_obj
 
     # 花火玉の名前の番号でチャンネルを割り振るようにする
-    sphere_channel = 1
-    if '.' in sphere_obj.name:
-        sphere_channel = (int(sphere_obj.name.split('.')[1]) % 32) + 1
+    sphere_channel = ((int(len(C.scene.sequence_editor.sequences) / 2)) % 32) + 1
+
+    # 花火が開くのは、アニメーション最終フレームから10フレ後なので、合わせる
+    particle_start_frame = animation_end_frame + 10
     
     # 打ち上げSE
     C.scene.sequence_editor.sequences.new_sound(name="Begin", filepath=firework_se_begin[random.randint(0, len(firework_se_begin) - 1)], channel=sphere_channel, frame_start=firework_start_frame)
     # 爆発SE
-    C.scene.sequence_editor.sequences.new_sound(name="Bomb", filepath=firework_se_bomb[random.randint(0, len(firework_se_bomb) - 1)], channel=sphere_channel, frame_start=animation_end_frame)
+    C.scene.sequence_editor.sequences.new_sound(name="Bomb", filepath=firework_se_bomb[random.randint(0, len(firework_se_bomb) - 1)], channel=sphere_channel, frame_start=particle_start_frame)
 
 if __name__ == '__main__':
     firework_start_frame = ST_FR
