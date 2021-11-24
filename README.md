@@ -16,7 +16,7 @@
 - Scriptingタブにて「run_firework_program_script.py」を開く
 
 ### 固定花火アニメーションの作り方
-firework_program.jsonを変更してください。<br />
+firework_program.pyを変更してください。<br />
 ```
 "start_frame_num": [
     {"x": X0, "y": Y0}
