@@ -19,7 +19,7 @@ if __name__ == '__main__':
         pos_X = p_x
         pos_Y = p_y
     except:
-        pos_X = random.randint(-10, 10)
-        pos_Y = random.randint(-10, 10)
+        pos_X = random.randint(-50, 50)
+        pos_Y = 0 #random.randint(-10, 10)
 
     CreateHanabiModel(pos_X, pos_Y)
