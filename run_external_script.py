@@ -43,7 +43,7 @@ bpy.context.scene.sequence_editor_create()
 ROTATE = 2*math.pi/360
 
 # カメラ配置
-bpy.ops.object.camera_add(location=(0,-150,36), rotation=(90*ROTATE, 0, 0))
+bpy.ops.object.camera_add(location=(0,0,75), rotation=(70*ROTATE, 0, 0))
 bpy.data.objects[0].name = "Camera"
 
 # Worldのシェーダーで星空を生成
